@@ -1,71 +1,54 @@
-function janken(choice) {
-    let resultElement = document.getElementById("ResultMessage");
+function choice(userChoice) {
     let PlayersChoiceElement = document.getElementById("PlayersChoice");
+    PlayersChoiceElement.innerHTML = userChoice;
 
-    PlayersChoiceElement.innerHTML = Num2Synbol(choice);
+    let additionalOptions = document.getElementById("additionalOptions");
+    let passengerCount = document.getElementById("passengerCount");
 
-    let PCsChoiceElemennt = document.getElementById("PCsChoice");
-    let PCsChoiceNumber = Math.floor(Math.random() * 3) + 1;
+    additionalOptions.style.display = "block";
 
-    PCsChoiceElemennt.innerHTML = Num2Synbol(PCsChoiceNumber);
-
-    resultElement.innerHTML = Judgement(choice, PCsChoiceNumber);
+    if (userChoice === "Yes") {
+        passengerCount.style.display = "block";
+    } else {
+        passengerCount.style.display = "none";
+    }
 }
 
-function Num2Synbol(choice)
-{
-    let symbol = "";
+function submitOptions(event) {
+    event.preventDefault();
+    
+    let userChoice = document.getElementById("PlayersChoice").innerHTML;
+    let numPassengers = userChoice === "Yes" ? document.getElementById("numPassengers").value : "N/A";
+    let location = document.getElementById("locationSelect").value;
 
-    switch (choice) {
-        case 1:
-            symbol = "✊🏻";
-            break;
+    let resultElement = document.getElementById("ResultMessage");
 
-        case 2:
-            symbol = "✌🏻";
-            break;
+    let PCsChoiceElement = document.getElementById("PCsChoice");
+    let PCsChoice = getRandomChoice();
+    PCsChoiceElement.innerHTML = `車: ${PCsChoice.car}, 場所: ${PCsChoice.location}`;
 
-        default:
-            symbol = "🖐🏻";
-            break;
-    }
-
-    return symbol;
+    resultElement.innerHTML = determineResult(userChoice, numPassengers, location, PCsChoice);
 }
 
-function Judgement(PlayersChoice, PCsChoice)
-{
-    let resultMsg = "";
-    let constPlayerWin = "プレイヤーの勝ち";
-    let constPCWin = "コンピューターの勝ち";
-    let constDraw = "あいこ";
+function getRandomChoice() {
+    const carChoices = ["Yes", "No"];
+    const locationChoices = ["A", "B", "C", "D"];
+    
+    let carChoice = carChoices[Math.floor(Math.random() * carChoices.length)];
+    let locationChoice = locationChoices[Math.floor(Math.random() * locationChoices.length)];
+    
+    return { car: carChoice, location: locationChoice };
+}
 
-    if (PlayersChoice == PCsChoice) {
-        resultMsg = constDraw;
-    }else{
-        if(PlayersChoice == 1){ // Gu
-            if (PCsChoice == 2){ // Choki
-                resultMsg = constPlayerWin;
-            }else {
-                resultMsg = constPCWin;
-            }
-        }else{
-            if(PlayersChoice == 2) { // Choki
-                if (PCsChoice == 1) { // Gu
-                    resultMsg = constPCWin;
-                }else { // Pa
-                    resultMsg = constPlayerWin
-                }
-            }else{//Pa
-                if(PCsChoice == 1) {//Gu
-                    resultMsg = constPlayerWin;
-                }else{
-                    resultMsg = constPCWin;
-                }
-            }
-        }
+function determineResult(userChoice, numPassengers, location, computerChoice) {
+    let resultMsg = `ユーザー: 車 - ${userChoice}, 乗せられる人数 - ${numPassengers}, 場所 - ${location}`;
+    let compMsg = `コンピュータ: 車 - ${computerChoice.car}, 場所 - ${computerChoice.location}`;
+
+    if (userChoice === computerChoice.car && location === computerChoice.location) {
+        resultMsg += "<br>結果: あいこ";
+    } else {
+        resultMsg += "<br>結果: 違う選択肢";
     }
-
+    
     return resultMsg;
-
 }
