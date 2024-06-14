@@ -1,7 +1,23 @@
+// ページ遷移用の関数を追加
+function goToCreateGroup() {
+    document.getElementById("createGroup").classList.remove("hidden");
+    document.getElementById("joinGroup").classList.add("hidden");
+    document.getElementById("groupAccess").classList.add("hidden");
+    document.getElementById("main").classList.add("hidden");
+}
+
+function goToJoinGroup() {
+    document.getElementById("joinGroup").classList.remove("hidden");
+    document.getElementById("createGroup").classList.add("hidden");
+    document.getElementById("groupAccess").classList.add("hidden");
+    document.getElementById("main").classList.add("hidden");
+}
+
 function accessGroup(event) {
     event.preventDefault();
 
     let password = document.getElementById("groupPassword").value;
+
     // ここにパスワードに基づくグループへのアクセスロジックを追加する
     // 例えば、パスワードが正しい場合は次のページに移動するなどの処理を行う
 
