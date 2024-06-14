@@ -68,6 +68,3 @@ function displayMatches() {
         matchList.appendChild(listItem);
     }
 }
-
-// ページ読み込み時にマッチング結果を表示
-window.onload = displayMatches;
