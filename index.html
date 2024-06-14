@@ -10,49 +10,49 @@
     <link rel="stylesheet" href="./main.css">
 </head>
 <body>
-    <h1 id="title">車割アプリ</h1>
+    <div class="container">
+        <h1 id="title">車割アプリ</h1>
 
-    <div id="main">
-        <p>車を出せますか</p>
+        <div id="main">
+            <p>車を出せますか?</p>
+            <button onclick="choice('Yes')" class="symbol button">Yes</button>
+            <button onclick="choice('No')" class="symbol button">No</button>
+        </div>
 
-        <button onclick="choice('Yes')" class="symbol">Yes</button>
-        <button onclick="choice('No')" class="symbol">No</button>
+        <div id="additionalOptions" class="hidden">
+            <form id="optionsForm" onsubmit="submitOptions(event)">
+                <div id="passengerCount" class="hidden">
+                    <label for="numPassengers">乗せられる人数:</label>
+                    <select id="numPassengers">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </div>
+                <div id="location">
+                    <label for="locationSelect">場所:</label>
+                    <select id="locationSelect">
+                        <option value="群大">群大</option>
+                        <option value="高経">高経</option>
+                        <option value="健科">健科</option>
+                        <option value="県女">県女</option>
+                    </select>
+                </div>
+                <button type="submit" class="symbol button">Submit</button>
+            </form>
+        </div>
+
+        <div id="Player">
+            <p>あなたの回答</p>
+            <p id="PlayersChoice" class="symbol"></p>
+        </div>
+
+        <div id="Matches">
+            <p>マッチング結果</p>
+            <ul id="matchList"></ul>
+        </div>
     </div>
-
-    <div id="additionalOptions" style="display: none;">
-        <form id="optionsForm" onsubmit="submitOptions(event)">
-            <div id="passengerCount" style="display: none;">
-                <label for="numPassengers">乗せられる人数:</label>
-                <select id="numPassengers">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                </select>
-            </div>
-            <div id="location">
-                <label for="locationSelect">場所:</label>
-                <select id="locationSelect">
-                    <option value="群大">群大</option>
-                    <option value="高経">高経</option>
-                    <option value="健科">健科</option>
-                    <option value="県女">県女</option>
-                </select>
-            </div>
-            <button type="submit" class="symbol">Submit</button>
-        </form>
-    </div>
-
-    <div id="Player">
-        <p>あなたの回答</p>
-        <p id="PlayersChoice" class="symbol"></p>
-    </div>
-
-    <div id="Matches">
-        <p>マッチング結果</p>
-        <ul id="matchList"></ul>
-    </div>
-
 </body>
 </html>
