@@ -21,34 +21,53 @@ function submitOptions(event) {
     let numPassengers = userChoice === "Yes" ? document.getElementById("numPassengers").value : "N/A";
     let location = document.getElementById("locationSelect").value;
 
-    let resultElement = document.getElementById("ResultMessage");
+    // ユーザーの選択をローカルストレージに保存
+    let userSelection = {
+        car: userChoice,
+        passengers: numPassengers,
+        location: location
+    };
+    saveUserSelection(userSelection);
 
-    let PCsChoiceElement = document.getElementById("PCsChoice");
-    let PCsChoice = getRandomChoice();
-    PCsChoiceElement.innerHTML = `車: ${PCsChoice.car}, 場所: ${PCsChoice.location}`;
-
-    resultElement.innerHTML = determineResult(userChoice, numPassengers, location, PCsChoice);
+    // マッチング結果を表示
+    displayMatches();
 }
 
-function getRandomChoice() {
-    const carChoices = ["Yes", "No"];
-    const locationChoices = ["A", "B", "C", "D"];
-    
-    let carChoice = carChoices[Math.floor(Math.random() * carChoices.length)];
-    let locationChoice = locationChoices[Math.floor(Math.random() * locationChoices.length)];
-    
-    return { car: carChoice, location: locationChoice };
+function saveUserSelection(selection) {
+    let selections = JSON.parse(localStorage.getItem('selections')) || [];
+    selections.push(selection);
+    localStorage.setItem('selections', JSON.stringify(selections));
 }
 
-function determineResult(userChoice, numPassengers, location, computerChoice) {
-    let resultMsg = `ユーザー: 車 - ${userChoice}, 乗せられる人数 - ${numPassengers}, 場所 - ${location}`;
-    let compMsg = `コンピュータ: 車 - ${computerChoice.car}, 場所 - ${computerChoice.location}`;
+function displayMatches() {
+    let selections = JSON.parse(localStorage.getItem('selections')) || [];
+    let matchList = document.getElementById("matchList");
+    matchList.innerHTML = '';
 
-    if (userChoice === computerChoice.car && location === computerChoice.location) {
-        resultMsg += "<br>結果: あいこ";
-    } else {
-        resultMsg += "<br>結果: 違う選択肢";
+    selections.forEach((selection, index) => {
+        let listItem = document.createElement('li');
+        listItem.textContent = `ユーザー${index + 1}: 車 - ${selection.car}, 乗せられる人数 - ${selection.passengers}, 場所 - ${selection.location}`;
+        matchList.appendChild(listItem);
+    });
+
+    let userSelection = selections[selections.length - 1];
+    let matchFound = false;
+
+    selections.forEach((selection, index) => {
+        if (index < selections.length - 1 && userSelection.location === selection.location) {
+            let listItem = document.createElement('li');
+            listItem.textContent = `マッチング: ユーザー${selections.length}とユーザー${index + 1}が場所${userSelection.location}でマッチしました`;
+            matchList.appendChild(listItem);
+            matchFound = true;
+        }
+    });
+
+    if (!matchFound) {
+        let listItem = document.createElement('li');
+        listItem.textContent = `ユーザー${selections.length}の選択はマッチが見つかりませんでした。`;
+        matchList.appendChild(listItem);
     }
-    
-    return resultMsg;
 }
+
+// ページ読み込み時にマッチング結果を表示
+window.onload = displayMatches;
