@@ -6,14 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>車割アプリ</title>
 
-    <script src="./app.js"></script>
     <link rel="stylesheet" href="./main.css">
 </head>
 <body>
     <div class="container">
         <h1 id="title">車割アプリ</h1>
 
-        <div id="main">
+        <div id="groupAccess">
+            <form id="groupAccessForm" onsubmit="accessGroup(event)">
+                <label for="groupPassword">グループパスワード:</label>
+                <input type="password" id="groupPassword" required>
+                <button type="submit" class="symbol button">Access Group</button>
+            </form>
+        </div>
+
+        <div id="main" class="hidden">
             <p>車を出せますか?</p>
             <button onclick="choice('Yes')" class="symbol button">Yes</button>
             <button onclick="choice('No')" class="symbol button">No</button>
@@ -56,14 +63,8 @@
             <p>マッチング結果</p>
             <ul id="matchList"></ul>
         </div>
-
-        <div id="groupAccess">
-            <form id="groupAccessForm" onsubmit="accessGroup(event)">
-                <label for="groupPassword">グループパスワード:</label>
-                <input type="password" id="groupPassword" required>
-                <button type="submit" class="symbol button">Access Group</button>
-            </form>
-        </div>
     </div>
+
+    <script src="./app.js"></script>
 </body>
 </html>

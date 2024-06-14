@@ -1,31 +1,45 @@
+function accessGroup(event) {
+    event.preventDefault();
+
+    let password = document.getElementById("groupPassword").value;
+    // ここにパスワードに基づくグループへのアクセスロジックを追加する
+    // 例えば、パスワードが正しい場合は次のページに移動するなどの処理を行う
+
+    // 仮のロジックとして、パスワードが "examplePassword" の場合に進むとする
+    if (password === "examplePassword") {
+        // パスワードが一致したら次のページを表示する
+        document.getElementById("groupAccess").classList.add("hidden");
+        document.getElementById("main").classList.remove("hidden");
+    } else {
+        alert("パスワードが正しくありません。");
+    }
+}
+
 function choice(userChoice) {
     let PlayersChoiceElement = document.getElementById("PlayersChoice");
-    PlayersChoiceElement.innerHTML = userChoice;
+    PlayersChoiceElement.textContent = `ユーザー名: ${document.getElementById("userName").value}, 回答: ${userChoice}`;
 
     let additionalOptions = document.getElementById("additionalOptions");
-    let passengerCount = document.getElementById("passengerCount");
-
-    additionalOptions.style.display = "block";
+    additionalOptions.classList.remove("hidden");
 
     if (userChoice === "Yes") {
-        passengerCount.style.display = "block";
+        document.getElementById("passengerCount").classList.remove("hidden");
     } else {
-        passengerCount.style.display = "none";
+        document.getElementById("passengerCount").classList.add("hidden");
     }
 }
 
 function submitOptions(event) {
     event.preventDefault();
     
-    let userName = document.getElementById("userName").value;
-    let userChoice = document.getElementById("PlayersChoice").innerHTML;
-    let numPassengers = userChoice === "Yes" ? document.getElementById("numPassengers").value : "N/A";
+    let userChoice = document.getElementById("PlayersChoice").textContent;
+    let numPassengers = userChoice.includes("Yes") ? document.getElementById("numPassengers").value : "N/A";
     let location = document.getElementById("locationSelect").value;
 
-    // ユーザーの選択と名前をローカルストレージに保存
+    // ユーザーの選択をローカルストレージに保存
     let userSelection = {
-        name: userName,
-        car: userChoice,
+        name: document.getElementById("userName").value,
+        car: userChoice.includes("Yes") ? "Yes" : "No",
         passengers: numPassengers,
         location: location
     };
@@ -73,7 +87,7 @@ function displayMatches() {
         matchList.appendChild(groupList);
     });
 
-    // マッチングしていない人の表示
+    // マッチングしていない人がいる場合の表示
     let unmatchedList = document.createElement('ul');
     let unmatchedExist = false;
     selections.forEach((selection) => {
@@ -98,12 +112,4 @@ function displayMatches() {
         matchList.appendChild(unmatchedHeader);
         matchList.appendChild(unmatchedList);
     }
-}
-
-function accessGroup(event) {
-    event.preventDefault();
-
-    let password = document.getElementById("groupPassword").value;
-    // ここにパスワードに基づくグループへのアクセスロジックを追加する
-    // 例: 特定のパスワードで特定のグループのページにリダイレクトする処理など
 }
