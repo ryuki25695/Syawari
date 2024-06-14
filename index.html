@@ -15,8 +15,32 @@
     <div id="main">
         <p>車を出せますか</p>
 
-        <button onclick="yes;" class="symbol">Yes</button>
-        <button onclick="no;" class="symbol">No</button>
+        <button onclick="choice('Yes')" class="symbol">Yes</button>
+        <button onclick="choice('No')" class="symbol">No</button>
+    </div>
+
+    <div id="additionalOptions" style="display: none;">
+        <form id="optionsForm" onsubmit="submitOptions(event)">
+            <div id="passengerCount" style="display: none;">
+                <label for="numPassengers">乗せられる人数:</label>
+                <select id="numPassengers">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                </select>
+            </div>
+            <div id="location">
+                <label for="location">場所:</label>
+                <select id="locationSelect">
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                </select>
+            </div>
+            <button type="submit" class="symbol">Submit</button>
+        </form>
     </div>
 
     <div id="Player">
