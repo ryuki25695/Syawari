@@ -48,7 +48,7 @@ function displayMatches() {
 
     selections.forEach((selection, index) => {
         let listItem = document.createElement('li');
-        listItem.textContent = `ユーザー${index + 1} (${selection.name}): 車 - ${selection.car}, 乗せられる人数 - ${selection.passengers}, 場所 - ${selection.location}`;
+        listItem.textContent = `${selection.name}: 車 - ${selection.car}, 乗せられる人数 - ${selection.passengers}, 場所 - ${selection.location}`;
         matchList.appendChild(listItem);
     });
 
