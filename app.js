@@ -46,30 +46,64 @@ function displayMatches() {
     let matchList = document.getElementById("matchList");
     matchList.innerHTML = '';
 
-    selections.forEach((selection, index) => {
-        let listItem = document.createElement('li');
-        listItem.textContent = `${selection.name}: 車 - ${selection.car}, 乗せられる人数 - ${selection.passengers}, 場所 - ${selection.location}`;
-        matchList.appendChild(listItem);
+    // 車を持っているユーザーごとにグループ化する
+    let userGroups = {};
+    selections.forEach((selection) => {
+        if (!(selection.car in userGroups)) {
+            userGroups[selection.car] = [];
+        }
+        userGroups[selection.car].push(selection);
     });
 
-    let userSelection = selections[selections.length - 1];
-    let matchFound = false;
+    // マッチング結果を表示する
+    Object.keys(userGroups).forEach((car) => {
+        let group = userGroups[car];
 
-    selections.forEach((selection, index) => {
-        if (index < selections.length - 1 && userSelection.location === selection.location) {
+        let groupHeader = document.createElement('li');
+        groupHeader.textContent = `${group[0].name} の選択`;
+
+        let groupList = document.createElement('ul');
+        group.forEach((selection) => {
             let listItem = document.createElement('li');
-            listItem.textContent = `マッチング: ${userSelection.name} と ${selection.name} が場所 ${userSelection.location} でマッチしました`;
-            matchList.appendChild(listItem);
-            matchFound = true;
+            listItem.textContent = `乗せられる人数 - ${selection.passengers}, 場所 - ${selection.location}`;
+            groupList.appendChild(listItem);
+        });
+
+        matchList.appendChild(groupHeader);
+        matchList.appendChild(groupList);
+    });
+
+    // マッチングしていない人の表示
+    let unmatchedList = document.createElement('ul');
+    let unmatchedExist = false;
+    selections.forEach((selection) => {
+        let matched = false;
+        Object.keys(userGroups).forEach((car) => {
+            if (selection.car === car) {
+                matched = true;
+            }
+        });
+        if (!matched) {
+            let listItem = document.createElement('li');
+            listItem.textContent = `${selection.name} の選択は他のユーザーとのマッチングが見つかりませんでした。`;
+            unmatchedList.appendChild(listItem);
+            unmatchedExist = true;
         }
     });
 
-    if (!matchFound) {
-        let listItem = document.createElement('li');
-        listItem.textContent = `${userSelection.name} の選択は他のユーザーとのマッチングが見つかりませんでした。`;
-        matchList.appendChild(listItem);
+    if (unmatchedExist) {
+        let unmatchedHeader = document.createElement('li');
+        unmatchedHeader.textContent = "マッチングしていない人";
+
+        matchList.appendChild(unmatchedHeader);
+        matchList.appendChild(unmatchedList);
     }
 }
 
-// ページ読み込み時にマッチング結果を表示
-window.onload = displayMatches;
+function accessGroup(event) {
+    event.preventDefault();
+
+    let password = document.getElementById("groupPassword").value;
+    // ここにパスワードに基づくグループへのアクセスロジックを追加する
+    // 例: 特定のパスワードで特定のグループのページにリダイレクトする処理など
+}

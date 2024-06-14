@@ -56,6 +56,14 @@
             <p>マッチング結果</p>
             <ul id="matchList"></ul>
         </div>
+
+        <div id="groupAccess">
+            <form id="groupAccessForm" onsubmit="accessGroup(event)">
+                <label for="groupPassword">グループパスワード:</label>
+                <input type="password" id="groupPassword" required>
+                <button type="submit" class="symbol button">Access Group</button>
+            </form>
+        </div>
     </div>
 </body>
 </html>
