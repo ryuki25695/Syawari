@@ -17,12 +17,14 @@ function choice(userChoice) {
 function submitOptions(event) {
     event.preventDefault();
     
+    let userName = document.getElementById("userName").value;
     let userChoice = document.getElementById("PlayersChoice").innerHTML;
     let numPassengers = userChoice === "Yes" ? document.getElementById("numPassengers").value : "N/A";
     let location = document.getElementById("locationSelect").value;
 
-    // ユーザーの選択をローカルストレージに保存
+    // ユーザーの選択と名前をローカルストレージに保存
     let userSelection = {
+        name: userName,
         car: userChoice,
         passengers: numPassengers,
         location: location
@@ -46,7 +48,7 @@ function displayMatches() {
 
     selections.forEach((selection, index) => {
         let listItem = document.createElement('li');
-        listItem.textContent = `ユーザー${index + 1}: 車 - ${selection.car}, 乗せられる人数 - ${selection.passengers}, 場所 - ${selection.location}`;
+        listItem.textContent = `ユーザー${index + 1} (${selection.name}): 車 - ${selection.car}, 乗せられる人数 - ${selection.passengers}, 場所 - ${selection.location}`;
         matchList.appendChild(listItem);
     });
 
@@ -56,7 +58,7 @@ function displayMatches() {
     selections.forEach((selection, index) => {
         if (index < selections.length - 1 && userSelection.location === selection.location) {
             let listItem = document.createElement('li');
-            listItem.textContent = `マッチング: ユーザー${selections.length}とユーザー${index + 1}が場所${userSelection.location}でマッチしました`;
+            listItem.textContent = `マッチング: ${userSelection.name} と ${selection.name} が場所 ${userSelection.location} でマッチしました`;
             matchList.appendChild(listItem);
             matchFound = true;
         }
@@ -64,7 +66,10 @@ function displayMatches() {
 
     if (!matchFound) {
         let listItem = document.createElement('li');
-        listItem.textContent = `ユーザー${selections.length}の選択はマッチが見つかりませんでした。`;
+        listItem.textContent = `${userSelection.name} の選択は他のユーザーとのマッチングが見つかりませんでした。`;
         matchList.appendChild(listItem);
     }
 }
+
+// ページ読み込み時にマッチング結果を表示
+window.onload = displayMatches;
