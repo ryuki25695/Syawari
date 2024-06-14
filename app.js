@@ -1,18 +1,35 @@
-function accessGroup(event) {
+let currentGroup = null; // 現在のグループ情報を保持する変数
+
+function createGroup(event) {
     event.preventDefault();
 
-    let password = document.getElementById("groupPassword").value;
-    // ここにパスワードに基づくグループへのアクセスロジックを追加する
-    // 例えば、パスワードが正しい場合は次のページに移動するなどの処理を行う
+    let groupName = document.getElementById("groupName").value;
+    let groupPassword = document.getElementById("groupPasswordCreate").value;
 
-    // 仮のロジックとして、パスワードが "examplePassword" の場合に進むとする
-    if (password === "examplePassword") {
-        // パスワードが一致したら次のページを表示する
-        document.getElementById("groupAccess").classList.add("hidden");
-        document.getElementById("main").classList.remove("hidden");
-    } else {
-        alert("パスワードが正しくありません。");
-    }
+    // ここにグループ作成のロジックを追加する
+    // 例えば、グループを作成してデータベースやローカルストレージに保存するなどの処理を行う
+    // ここでは単純にグループ名を保存するだけとする
+    currentGroup = groupName;
+
+    // 表示を切り替える
+    document.getElementById("createGroup").classList.add("hidden");
+    document.getElementById("main").classList.remove("hidden");
+}
+
+function joinGroup(event) {
+    event.preventDefault();
+
+    let groupName = document.getElementById("groupNameJoin").value;
+    let groupPassword = document.getElementById("groupPasswordJoin").value;
+
+    // ここに既存グループへの参加のロジックを追加する
+    // 例えば、グループが存在するか、パスワードが正しいかをチェックする処理を行う
+    // ここでは単純にグループ名を保存するだけとする
+    currentGroup = groupName;
+
+    // 表示を切り替える
+    document.getElementById("joinGroup").classList.add("hidden");
+    document.getElementById("main").classList.remove("hidden");
 }
 
 function choice(userChoice) {
@@ -38,6 +55,7 @@ function submitOptions(event) {
 
     // ユーザーの選択をローカルストレージに保存
     let userSelection = {
+        group: currentGroup,
         name: document.getElementById("userName").value,
         car: userChoice.includes("Yes") ? "Yes" : "No",
         passengers: numPassengers,
@@ -63,23 +81,23 @@ function displayMatches() {
     // 車を持っているユーザーごとにグループ化する
     let userGroups = {};
     selections.forEach((selection) => {
-        if (!(selection.car in userGroups)) {
-            userGroups[selection.car] = [];
+        if (!(selection.group in userGroups)) {
+            userGroups[selection.group] = [];
         }
-        userGroups[selection.car].push(selection);
+        userGroups[selection.group].push(selection);
     });
 
     // マッチング結果を表示する
-    Object.keys(userGroups).forEach((car) => {
-        let group = userGroups[car];
+    Object.keys(userGroups).forEach((group) => {
+        let groupSelections = userGroups[group];
 
         let groupHeader = document.createElement('li');
-        groupHeader.textContent = `${group[0].name} の選択`;
+        groupHeader.textContent = `${group} の選択`;
 
         let groupList = document.createElement('ul');
-        group.forEach((selection) => {
+        groupSelections.forEach((selection) => {
             let listItem = document.createElement('li');
-            listItem.textContent = `乗せられる人数 - ${selection.passengers}, 場所 - ${selection.location}`;
+            listItem.textContent = `ユーザー名: ${selection.name}, 乗せられる人数 - ${selection.passengers}, 場所 - ${selection.location}`;
             groupList.appendChild(listItem);
         });
 
@@ -92,24 +110,10 @@ function displayMatches() {
     let unmatchedExist = false;
     selections.forEach((selection) => {
         let matched = false;
-        Object.keys(userGroups).forEach((car) => {
-            if (selection.car === car) {
+        Object.keys(userGroups).forEach((group) => {
+            if (selection.group === group) {
                 matched = true;
             }
         });
         if (!matched) {
-            let listItem = document.createElement('li');
-            listItem.textContent = `${selection.name} の選択は他のユーザーとのマッチングが見つかりませんでした。`;
-            unmatchedList.appendChild(listItem);
-            unmatchedExist = true;
-        }
-    });
-
-    if (unmatchedExist) {
-        let unmatchedHeader = document.createElement('li');
-        unmatchedHeader.textContent = "マッチングしていない人";
-
-        matchList.appendChild(unmatchedHeader);
-        matchList.appendChild(unmatchedList);
-    }
-}
+            let listItem

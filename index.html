@@ -12,20 +12,38 @@
     <div class="container">
         <h1 id="title">車割アプリ</h1>
 
-        <div id="groupAccess">
-            <form id="groupAccessForm" onsubmit="accessGroup(event)">
-                <label for="groupPassword">グループパスワード:</label>
-                <input type="password" id="groupPassword" required>
-                <button type="submit" class="symbol button">Access Group</button>
+        <!-- グループ作成フォーム -->
+        <div id="createGroup">
+            <h2>新しいグループを作成</h2>
+            <form id="createGroupForm" onsubmit="createGroup(event)">
+                <label for="groupName">グループ名:</label>
+                <input type="text" id="groupName" required>
+                <label for="groupPasswordCreate">グループパスワード:</label>
+                <input type="password" id="groupPasswordCreate" required>
+                <button type="submit" class="symbol button">Create Group</button>
             </form>
         </div>
 
+        <!-- 既存グループ参加フォーム -->
+        <div id="joinGroup">
+            <h2>既存のグループに参加</h2>
+            <form id="joinGroupForm" onsubmit="joinGroup(event)">
+                <label for="groupNameJoin">グループ名:</label>
+                <input type="text" id="groupNameJoin" required>
+                <label for="groupPasswordJoin">グループパスワード:</label>
+                <input type="password" id="groupPasswordJoin" required>
+                <button type="submit" class="symbol button">Join Group</button>
+            </form>
+        </div>
+
+        <!-- メインセクション -->
         <div id="main" class="hidden">
             <p>車を出せますか?</p>
             <button onclick="choice('Yes')" class="symbol button">Yes</button>
             <button onclick="choice('No')" class="symbol button">No</button>
         </div>
 
+        <!-- 追加オプション -->
         <div id="additionalOptions" class="hidden">
             <form id="optionsForm" onsubmit="submitOptions(event)">
                 <label for="userName">ユーザー名:</label>
@@ -54,13 +72,15 @@
             </form>
         </div>
 
+        <!-- ユーザーの回答 -->
         <div id="Player">
-            <p>あなたの回答</p>
+            <h2>あなたの回答</h2>
             <p id="PlayersChoice" class="symbol"></p>
         </div>
 
+        <!-- マッチング結果 -->
         <div id="Matches">
-            <p>マッチング結果</p>
+            <h2>マッチング結果</h2>
             <ul id="matchList"></ul>
         </div>
     </div>
