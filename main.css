@@ -1,0 +1,11 @@
+#title {
+    text-decoration: underline;
+}
+
+.symbol {
+    font-size: 3em;
+}
+
+#ResultMessage {
+    font-size: 2em;
+}
