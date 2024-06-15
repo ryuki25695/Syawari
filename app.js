@@ -1,131 +1,111 @@
-// ページ遷移用の関数を追加
-function goToCreateGroup() {
-    document.getElementById("createGroup").classList.remove("hidden");
-    document.getElementById("joinGroup").classList.add("hidden");
-    document.getElementById("groupAccess").classList.add("hidden");
-    document.getElementById("main").classList.add("hidden");
+function showRegister() {
+    document.getElementById("loginForm").classList.add("hidden");
+    document.getElementById("registerForm").classList.remove("hidden");
 }
 
-function goToJoinGroup() {
-    document.getElementById("joinGroup").classList.remove("hidden");
-    document.getElementById("createGroup").classList.add("hidden");
-    document.getElementById("groupAccess").classList.add("hidden");
-    document.getElementById("main").classList.add("hidden");
+function showLogin() {
+    document.getElementById("loginForm").classList.remove("hidden");
+    document.getElementById("registerForm").classList.add("hidden");
 }
 
-function accessGroup(event) {
+function register(event) {
     event.preventDefault();
-
-    let password = document.getElementById("groupPassword").value;
-
-    // ここにパスワードに基づくグループへのアクセスロジックを追加する
-    // 例えば、パスワードが正しい場合は次のページに移動するなどの処理を行う
-
-    // 仮のロジックとして、パスワードが "examplePassword" の場合に進むとする
-    if (password === "examplePassword") {
-        // パスワードが一致したら次のページを表示する
-        document.getElementById("groupAccess").classList.add("hidden");
-        document.getElementById("main").classList.remove("hidden");
-    } else {
-        alert("パスワードが正しくありません。");
-    }
-}
-
-function choice(userChoice) {
-    let PlayersChoiceElement = document.getElementById("PlayersChoice");
-    PlayersChoiceElement.textContent = `ユーザー名: ${document.getElementById("userName").value}, 回答: ${userChoice}`;
-
-    let additionalOptions = document.getElementById("additionalOptions");
-    additionalOptions.classList.remove("hidden");
-
-    if (userChoice === "Yes") {
-        document.getElementById("passengerCount").classList.remove("hidden");
-    } else {
-        document.getElementById("passengerCount").classList.add("hidden");
-    }
-}
-
-function submitOptions(event) {
-    event.preventDefault();
+    let newUsername = document.getElementById("newUsername").value;
+    let newPassword = document.getElementById("newPassword").value;
     
-    let userChoice = document.getElementById("PlayersChoice").textContent;
-    let numPassengers = userChoice.includes("Yes") ? document.getElementById("numPassengers").value : "N/A";
-    let location = document.getElementById("locationSelect").value;
+    let users = JSON.parse(localStorage.getItem('users')) || {};
+    if (users[newUsername]) {
+        alert("このユーザー名は既に使用されています。");
+        return;
+    }
 
-    // ユーザーの選択をローカルストレージに保存
-    let userSelection = {
-        name: document.getElementById("userName").value,
-        car: userChoice.includes("Yes") ? "Yes" : "No",
-        passengers: numPassengers,
-        location: location
-    };
-    saveUserSelection(userSelection);
+    users[newUsername] = newPassword;
+    localStorage.setItem('users', JSON.stringify(users));
+    alert("登録が完了しました。");
 
-    // マッチング結果を表示
-    displayMatches();
+    // 登録後にログインしてリダイレクト
+    localStorage.setItem('currentUser', newUsername);
+    window.location.href = "user.html";
 }
 
-function saveUserSelection(selection) {
-    let selections = JSON.parse(localStorage.getItem('selections')) || [];
-    selections.push(selection);
-    localStorage.setItem('selections', JSON.stringify(selections));
-}
+function login(event) {
+    event.preventDefault();
+    let username = document.getElementById("username").value;
+    let password = document.getElementById("password").value;
 
-function displayMatches() {
-    let selections = JSON.parse(localStorage.getItem('selections')) || [];
-    let matchList = document.getElementById("matchList");
-    matchList.innerHTML = '';
-
-    // 車を持っているユーザーごとにグループ化する
-    let userGroups = {};
-    selections.forEach((selection) => {
-        if (!(selection.car in userGroups)) {
-            userGroups[selection.car] = [];
-        }
-        userGroups[selection.car].push(selection);
-    });
-
-    // マッチング結果を表示する
-    Object.keys(userGroups).forEach((car) => {
-        let group = userGroups[car];
-
-        let groupHeader = document.createElement('li');
-        groupHeader.textContent = `${group[0].name} の選択`;
-
-        let groupList = document.createElement('ul');
-        group.forEach((selection) => {
-            let listItem = document.createElement('li');
-            listItem.textContent = `乗せられる人数 - ${selection.passengers}, 場所 - ${selection.location}`;
-            groupList.appendChild(listItem);
-        });
-
-        matchList.appendChild(groupHeader);
-        matchList.appendChild(groupList);
-    });
-
-    // マッチングしていない人がいる場合の表示
-    let unmatchedList = document.createElement('ul');
-    let unmatchedExist = false;
-    selections.forEach((selection) => {
-        let matched = false;
-        Object.keys(userGroups).forEach((car) => {
-            if (selection.car === car) {
-                matched = true;
-            }
-        });
-        if (!matched) {
-            let listItem = document.createElement('li');
-            listItem.textContent = `${selection.name} の選択は他のユーザーとのマッチングが見つかりませんでした。`;
-            unmatchedList.appendChild(listItem);
-            unmatchedExist = true;
-        }
-    });
-
-    if (unmatchedExist) {
-        let unmatchedHeader = document.createElement('li');
-        unmatchedHeader.textContent = "マッチングしていない人";
-
-        matchList.appendChild(unmatchedHeader);
-        matchList.appendChild(unmatchedList);
+    let users = JSON.parse(localStorage.getItem('users')) || {};
+    if (users[username] && users[username] === password) {
+        localStorage.setItem('currentUser', username);
+        window.location.href = "user.html";  // ユーザーページにリダイレクト
+    } else {
+        alert("ユーザー名またはパスワードが正しくありません。");
     }
 }
+
+function logout() {
+    localStorage.removeItem('currentUser');
+    window.location.href = "index.html";  // ログインページにリダイレクト
+}
+
+function goBack() {
+    window.location.href = "index.html";  // ログインページにリダイレクト
+}
+
+function createGroup(event) {
+    event.preventDefault();
+    let groupName = document.getElementById("groupName").value;
+    let groupPassword = document.getElementById("groupPasswordCreate").value;
+
+    let groups = JSON.parse(localStorage.getItem('groups')) || {};
+    if (groups[groupName]) {
+        alert("このグループ名は既に使用されています。");
+        return;
+    }
+
+    groups[groupName] = { password: groupPassword, members: [localStorage.getItem('currentUser')] };
+    localStorage.setItem('groups', JSON.stringify(groups));
+    alert(`グループ ${groupName} が作成されました。`);
+    updateGroupList();
+}
+
+function joinGroup(event) {
+    event.preventDefault();
+    let groupName = document.getElementById("groupNameJoin").value;
+    let groupPassword = document.getElementById("groupPasswordJoin").value;
+
+    let groups = JSON.parse(localStorage.getItem('groups')) || {};
+    if (groups[groupName] && groups[groupName].password === groupPassword) {
+        groups[groupName].members.push(localStorage.getItem('currentUser'));
+        localStorage.setItem('groups', JSON.stringify(groups));
+        alert(`グループ ${groupName} に参加しました。`);
+        updateGroupList();
+    } else {
+        alert("グループ名またはパスワードが正しくありません。");
+    }
+}
+
+function updateGroupList() {
+    let currentUser = localStorage.getItem('currentUser');
+    let groups = JSON.parse(localStorage.getItem('groups')) || {};
+    let groupList = document.getElementById("groupList");
+    groupList.innerHTML = '';
+
+    Object.keys(groups).forEach(groupName => {
+        if (groups[groupName].members.includes(currentUser)) {
+            let listItem = document.createElement('li');
+            listItem.textContent = `グループ名: ${groupName}`;
+            groupList.appendChild(listItem);
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.location.pathname.endsWith("user.html")) {
+        if (localStorage.getItem('currentUser')) {
+            document.getElementById("userDisplayName").textContent = localStorage.getItem('currentUser');
+            updateGroupList();
+        } else {
+            window.location.href = "index.html";  // ログインしていない場合はログインページにリダイレクト
+        }
+    }
+});
